@@ -6,8 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { connect } from 'react-redux';
 import { MyDispatch, closeDialog } from '../../../Actions/Actions';
-import Plyr from 'react-plyr';
-import 'plyr/dist/plyr.css';
+import Plyr from 'plyr-react';
+import 'plyr-react/plyr.css';
 import { FileItem } from '../../../Api/Item';
 import { DialogStateProps, DialogDispatchProps } from '../dialogTypes';
 import { AppState } from '../../../Reducers/reducer';
@@ -31,7 +31,15 @@ class FormDialog extends Component<MediaProps> {
                             (
                                 <div>
                                     <p>Playing {fileName}</p>
-                                    <Plyr type={type} /*TODO: provider={provider}*/ url={url} iconUrl="./vendor/plyr/plyr.svg" />
+                                    <Plyr
+                                        options={{
+                                            iconUrl: "./vendor/plyr/plyr.svg"   
+                                        }}
+                                        source={{
+                                            type: type!,
+                                            sources: [{ src: url!, /*TODO: provider=provider*/ }]
+                                        }}
+                                    />
                                 </div>
                             )
                             : <p>No media file opened</p>
