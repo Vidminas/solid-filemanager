@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { withStyles, createStyles, WithStyles } from "@mui/styles";
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from "@mui/material/styles";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Button from '@mui/material/Button';
 import './BreadcrumbText.css';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles()((theme: Theme) => ({
   lastPath: {
     display: 'block',
     [theme.breakpoints.up('sm')]: {
@@ -19,40 +19,38 @@ const styles = (theme: Theme) => createStyles({
       display: 'block',
     }
   }
-});
+}));
 
-class BreadcrumbText extends Component<BreadcrumbTextProps> {
+const BreadcrumbText: React.FC<BreadcrumbTextProps> = (props) => {
+  const { handleClickPath, path, rootTitle, handleGoBack, canGoBack } = props;
+  const { classes } = useStyles();
 
-    render() {
-        const { classes, handleClickPath, path, rootTitle, handleGoBack, canGoBack } = this.props;
+  const separator = <span>&gt;</span>;
+  const rootPath = <span onClick={() => handleClickPath(-1)} data-index={0}>
+      { rootTitle } { path.length ? separator : '' }
+  </span>;
+  const lastPath = [...path].pop() || rootTitle;
 
-        const separator = <span>&gt;</span>;
-        const rootPath = <span onClick={() => handleClickPath(-1)} data-index={0}>
-            { rootTitle } { path.length ? separator : '' }
-        </span>;
-        const lastPath = [...path].pop() || rootTitle;
+  const directories = path.map((dir: string, index: number) => {
+      return <span key={index} data-index={index} onClick={(e) => handleClickPath(index)}>
+          <span>{dir}</span> { path.length -1 !== index ? separator : '' }&nbsp;
+      </span>
+  });
 
-        const directories = path.map((dir, index) => {
-            return <span key={index} data-index={index} onClick={(e) => handleClickPath(index)}>
-                <span>{dir}</span> { path.length -1 !== index ? separator : '' }&nbsp;
-            </span>
-        });
-
-        return (
-            <div className="BreadcrumbText">
-                <div className={classes.lastPath}>
-                    <Button onClick={handleGoBack} color="inherit" type="button" style={{display: canGoBack ? 'inline-flex' : 'none'}}>
-                        <KeyboardArrowLeftIcon />
-                    </Button>
-                    {lastPath}
-                </div>
-                <div className={classes.paths}>{rootPath} {directories}</div>
-            </div>
-        );
-    }
+  return (
+      <div className="BreadcrumbText">
+          <div className={classes.lastPath}>
+              <Button onClick={handleGoBack} color="inherit" type="button" style={{display: canGoBack ? 'inline-flex' : 'none'}}>
+                  <KeyboardArrowLeftIcon />
+              </Button>
+              {lastPath}
+          </div>
+          <div className={classes.paths}>{rootPath} {directories}</div>
+      </div>
+  );
 }
 
-interface BreadcrumbTextProps extends WithStyles<typeof styles> {
+interface BreadcrumbTextProps {
     handleClickPath(index: number): void;
     handleGoBack(): void;
     canGoBack: boolean;
@@ -65,4 +63,4 @@ const mapDispatchToProps = () => ({});
 
 const mapStateToProps = () => ({});
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(BreadcrumbText));
+export default connect(mapStateToProps, mapDispatchToProps)(BreadcrumbText);

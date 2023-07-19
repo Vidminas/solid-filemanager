@@ -4,7 +4,7 @@ import Navbar from './Components/Navbar/Navbar';
 import ContextMenu from './Components/ContextMenu/ContextMenu';
 import Dialogs from './Components/Dialogs/Dialogs';
 
-import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import blue from '@mui/material/colors/blue';
 import { connect } from 'react-redux';
 import { initApp, MyDispatch, closeContextMenu } from './Actions/Actions';
@@ -27,15 +27,13 @@ class App extends Component<AppProps> {
         return (
             <div className="App">
                 <ThemeProvider theme={theme}>
-                    <StyledEngineProvider injectFirst>
-                        <div onClick={this.props.handleHideContextMenu} onContextMenu={this.props.handleHideContextMenu}>
-                            <Navbar />
-                            <FileList />
-                            <ContextMenu />
-                            <DynamicSnackbar />
-                            <Dialogs />
-                        </div>
-                    </StyledEngineProvider>
+                    <div onClick={this.props.handleHideContextMenu} onContextMenu={this.props.handleHideContextMenu}>
+                        <Navbar />
+                        <FileList />
+                        <ContextMenu />
+                        <DynamicSnackbar />
+                        <Dialogs />
+                    </div>
                 </ThemeProvider>
                 <HistoryHandler />
             </div>

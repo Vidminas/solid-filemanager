@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
-import { withStyles, createStyles, WithStyles } from "@mui/styles";
+import { makeStyles } from 'tss-react/mui';
 import { Theme, alpha } from "@mui/material/styles";
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -14,7 +14,7 @@ import ThreeDotsMenu from './ThreeDotsMenu';
 import BreadcrumbText from '../Breadcrumb/BreadcrumbText';
 import { AppState } from '../../Reducers/reducer';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     width: '100%',
     marginBottom: '4.3em'
@@ -75,10 +75,11 @@ const styles = (theme: Theme) => createStyles({
       },
     },
   },
-});
+}));
 
 function SearchAppBar(props: SearchAppBarProps) {
-  const { classes, path, filter, moveUpwards, canGoBack, handleChange, handleRefresh } = props;
+  const { path, filter, moveUpwards, canGoBack, handleChange, handleRefresh } = props;
+  const { classes } = useStyles();
   return (
     <div className={classes.root}>
       <AppBar position="fixed">
@@ -128,7 +129,7 @@ interface DispatchProps {
   moveUpwards(n: number): void;
   handleRefresh(): void;
 }
-interface SearchAppBarProps extends StateProps, DispatchProps, WithStyles<typeof styles> {
+interface SearchAppBarProps extends StateProps, DispatchProps {
 
 }
 
@@ -155,4 +156,4 @@ const mapDispatchToProps = (dispatch: MyDispatch): DispatchProps => {
 };
 
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SearchAppBar));
+export default connect(mapStateToProps, mapDispatchToProps)(SearchAppBar);

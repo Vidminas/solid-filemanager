@@ -2,9 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux'
-import reducer from './Reducers/reducer'
+import { createStore, applyMiddleware } from 'redux';
+import reducer from './Reducers/reducer';
 import * as serviceWorker from './serviceWorker';
+import { CacheProvider } from "@emotion/react";
+import { TssCacheProvider } from "tss-react";
+import createCache from "@emotion/cache";
 import App from './App';
 import './index.css';
 import '@fontsource/roboto/300.css';
@@ -13,10 +16,22 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 const store = createStore(reducer, applyMiddleware(thunk));
+const muiCache = createCache({
+    "key": "mui",
+    "prepend": true
+});
+
+const tssCache = createCache({
+    "key": "tss"
+});
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <CacheProvider value={muiCache}>
+            <TssCacheProvider value={tssCache}> 
+                <App />
+            </TssCacheProvider>
+        </CacheProvider>
     </Provider >
     , document.getElementById('root'));
 

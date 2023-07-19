@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles, createStyles, WithStyles } from "@mui/styles";
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from "@mui/material/styles";
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
@@ -8,44 +8,44 @@ import { connect } from 'react-redux';
 import { MyDispatch, resetErrorMessage } from '../../Actions/Actions';
 import { AppState } from '../../Reducers/reducer';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles()((theme: Theme) => ({
   close: {
     padding: theme.spacing(0.5),
   },
-});
+}));
 
-class DynamicSnackbar extends React.Component<DynamicSnackbarProps> {
-  render() {
-    const { classes, errorMsg, handleClose, open, notificationDuration } = this.props;
-    return (
-      <div>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={open}
-          autoHideDuration={notificationDuration}
-          onClose={handleClose}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">{errorMsg}</span>}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={handleClose}
-              size="large">
-              <CloseIcon />
-            </IconButton>,
-          ]}
-        />
-      </div>
-    );
-  }
+const DynamicSnackbar: React.FC<DynamicSnackbarProps> = (props) => {
+  const { errorMsg, handleClose, open, notificationDuration } = props;
+  const { classes } = useStyles();
+
+  return (
+    <div>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={open}
+        autoHideDuration={notificationDuration}
+        onClose={handleClose}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        message={<span id="message-id">{errorMsg}</span>}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            className={classes.close}
+            onClick={handleClose}
+            size="large">
+            <CloseIcon />
+          </IconButton>,
+        ]}
+      />
+    </div>
+  );
 }
 
 interface StateProps {
@@ -56,7 +56,7 @@ interface StateProps {
 interface DispatchProps {
   handleClose(): void;
 }
-interface DynamicSnackbarProps extends StateProps, DispatchProps, WithStyles<typeof styles> {}
+interface DynamicSnackbarProps extends StateProps, DispatchProps {}
 
 const mapStateToProps = (state: AppState): StateProps => {
     return {
@@ -74,5 +74,5 @@ const mapDispatchToProps = (dispatch: MyDispatch): DispatchProps => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(DynamicSnackbar));
+export default connect(mapStateToProps, mapDispatchToProps)(DynamicSnackbar);
 

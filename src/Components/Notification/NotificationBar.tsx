@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import InfoIcon from '@mui/icons-material/Info';
@@ -7,7 +6,7 @@ import green from '@mui/material/colors/green';
 import amber from '@mui/material/colors/amber';
 import SnackbarContent from '@mui/material/SnackbarContent';
 import WarningIcon from '@mui/icons-material/Warning';
-import { withStyles, createStyles, WithStyles } from "@mui/styles";
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from "@mui/material/styles";
 import { connect } from 'react-redux';
 import { AppState } from '../../Reducers/reducer';
@@ -27,44 +26,45 @@ const variantIcon = {
   [VariantTypes.INFO]:InfoIcon,
 };
 
-const styles1 = (theme: Theme) => createStyles({
-  [VariantTypes.SUCCESS]: {
-    backgroundColor: green[600],
-  },
-  [VariantTypes.ERROR]: {
-    backgroundColor: theme.palette.error.dark,
-  },
-  [VariantTypes.INFO]: {
-    backgroundColor: theme.palette.primary.dark,
-  },
-  [VariantTypes.WARNING]: {
-    backgroundColor: amber[700],
-  },
-  icon: {
-    fontSize: 20,
-  },
-  iconVariant: {
-    opacity: 0.9,
-    marginRight: theme.spacing(),
-  },
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-});
+const useStyles1 = makeStyles()((theme) => ({
+    [VariantTypes.SUCCESS]: {
+      backgroundColor: green[600],
+    },
+    [VariantTypes.ERROR]: {
+      backgroundColor: theme.palette.error.dark,
+    },
+    [VariantTypes.INFO]: {
+      backgroundColor: theme.palette.primary.dark,
+    },
+    [VariantTypes.WARNING]: {
+      backgroundColor: amber[700],
+    },
+    icon: {
+      fontSize: 20,
+    },
+    iconVariant: {
+      opacity: 0.9,
+      marginRight: theme.spacing(),
+    },
+    message: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+}));
 
 function MySnackbarContent(props: MySnackbarContentProps) {
-  const { open, classes, className, message, variant, ...other } = props;
+  const { open, className, message, variant, ...other } = props;
+  const { classes, cx } = useStyles1();
   const Icon = variantIcon[variant];
 
   return (
     open ?
       <SnackbarContent
-        className={clsx(classes[variant], className)}
+        className={cx(classes[variant], className)}
         aria-describedby="client-snackbar"
         message={
           <span id="client-snackbar" className={classes.message}>
-            <Icon className={clsx(classes.icon, classes.iconVariant)} />
+            <Icon className={cx(classes.icon, classes.iconVariant)} />
             {message}
           </span>
         }
@@ -74,7 +74,7 @@ function MySnackbarContent(props: MySnackbarContentProps) {
   );
 }
 
-interface MySnackbarContentProps extends WithStyles<typeof styles1> {
+interface MySnackbarContentProps {
   open: boolean;
   className: string;
   variant: VariantTypes;
@@ -82,18 +82,17 @@ interface MySnackbarContentProps extends WithStyles<typeof styles1> {
   [k: string]: any;
 }
 
-const MySnackbarContentWrapper = withStyles(styles1)(MySnackbarContent);
-
-const styles2 = (theme: Theme) => createStyles({
+const useStyles2 = makeStyles()((theme: Theme) => ({
   margin: {
     margin: theme.spacing(),
   },
-});
+}));
 
-function CustomizedSnackbars(props: CustomizedSnackbarsProps) {
-  const { classes, open, errorMsg } = props;
+function CustomizedSnackbars(props: StateProps) {
+  const { open, errorMsg } = props;
+  const { classes } = useStyles2();
   return (
-      <MySnackbarContentWrapper
+      <MySnackbarContent
         variant={VariantTypes.ERROR}
         open={open}
         className={classes.margin}
@@ -106,7 +105,6 @@ interface StateProps {
   open: boolean;
   errorMsg: string;
 }
-interface CustomizedSnackbarsProps extends StateProps, WithStyles<typeof styles2> {}
 
 const mapStateToProps = (state: AppState): StateProps => {
     return {
@@ -117,6 +115,6 @@ const mapStateToProps = (state: AppState): StateProps => {
 
 const mapDispatchToProps = () => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles2)(CustomizedSnackbars));
+export default connect(mapStateToProps, mapDispatchToProps)(CustomizedSnackbars);
 
 
