@@ -1,15 +1,16 @@
 import React from 'react';
-import { withStyles, Theme, createStyles, WithStyles } from '@material-ui/core/styles';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import { withStyles, createStyles, WithStyles } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import { connect } from 'react-redux';
 import { MyDispatch, resetErrorMessage } from '../../Actions/Actions';
 import { AppState } from '../../Reducers/reducer';
 
 const styles = (theme: Theme) => createStyles({
   close: {
-    padding: theme.spacing() / 2,
+    padding: theme.spacing(0.5),
   },
 });
 
@@ -31,7 +32,13 @@ class DynamicSnackbar extends React.Component<DynamicSnackbarProps> {
           }}
           message={<span id="message-id">{errorMsg}</span>}
           action={[
-            <IconButton key="close" aria-label="Close" color="inherit" className={classes.close} onClick={handleClose} >
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={handleClose}
+              size="large">
               <CloseIcon />
             </IconButton>,
           ]}

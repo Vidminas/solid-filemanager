@@ -1,13 +1,13 @@
 import React, { ChangeEvent } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles, Theme, createStyles, WithStyles } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import InputBase from '@mui/material/InputBase';
+import IconButton from '@mui/material/IconButton';
+import { withStyles, createStyles, WithStyles } from "@mui/styles";
+import { Theme, alpha } from "@mui/material/styles";
+import SearchIcon from '@mui/icons-material/Search';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { connect } from 'react-redux';
 import { refreshItemList, moveFolderUpwardsAndRefresh, filterItems, MyDispatch } from '../../Actions/Actions';
 import ThreeDotsMenu from './ThreeDotsMenu';
@@ -35,9 +35,9 @@ const styles = (theme: Theme) => createStyles({
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
     '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: '100%',
@@ -49,7 +49,7 @@ const styles = (theme: Theme) => createStyles({
     },
   },
   searchIcon: {
-    width: theme.spacing() * 9,
+    width: theme.spacing(9),
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -65,7 +65,7 @@ const styles = (theme: Theme) => createStyles({
     paddingTop: theme.spacing(),
     paddingRight: theme.spacing(),
     paddingBottom: theme.spacing(),
-    paddingLeft: theme.spacing() * 10,
+    paddingLeft: theme.spacing(10),
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -86,7 +86,7 @@ function SearchAppBar(props: SearchAppBarProps) {
           <Typography className={classes.title} variant="h6" color="inherit" noWrap>
             <BreadcrumbText 
                 path={path} 
-                handleClickPath={index => moveUpwards(path.length - index - 1)} 
+                handleClickPath={(index: number) => moveUpwards(path.length - index - 1)} 
                 handleGoBack={() => moveUpwards(1)}
                 canGoBack={canGoBack}
                 rootTitle="Solid Filemanager"
@@ -108,7 +108,7 @@ function SearchAppBar(props: SearchAppBarProps) {
               }}
             />
           </div>
-          <IconButton color="inherit" aria-label="Refresh" onClick={handleRefresh}>
+          <IconButton color="inherit" aria-label="Refresh" onClick={handleRefresh} size="large">
             <RefreshIcon/>
           </IconButton>
           <ThreeDotsMenu />

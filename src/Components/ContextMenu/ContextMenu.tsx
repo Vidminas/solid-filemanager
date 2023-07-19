@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './ContextMenu.css';
-import Menu from '@material-ui/core/Menu';
+import Menu from '@mui/material/Menu';
 import OpenAction from './ContextMenuActions/OpenAction';
 import RemoveAction from './ContextMenuActions/RemoveAction';
 import MoveAction from './ContextMenuActions/MoveAction';

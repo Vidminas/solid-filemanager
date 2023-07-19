@@ -1,10 +1,10 @@
 import React from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 import { connect } from 'react-redux';
 import { removeItems, MyDispatch } from '../../../Actions/Actions';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Typography from '@mui/material/Typography';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Item } from '../../../Api/Item';
 import { AppState } from '../../../Reducers/reducer';
 

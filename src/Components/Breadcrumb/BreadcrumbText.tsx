@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
-import Button from '@material-ui/core/Button';
+import { withStyles, createStyles, WithStyles } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import Button from '@mui/material/Button';
 import './BreadcrumbText.css';
 
 const styles = (theme: Theme) => createStyles({

@@ -4,9 +4,8 @@ import Navbar from './Components/Navbar/Navbar';
 import ContextMenu from './Components/ContextMenu/ContextMenu';
 import Dialogs from './Components/Dialogs/Dialogs';
 
-import { MuiThemeProvider as MaterialUI } from '@material-ui/core/styles';
-import { createTheme } from '@material-ui/core'
-import blue from '@material-ui/core/colors/blue';
+import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+import blue from '@mui/material/colors/blue';
 import { connect } from 'react-redux';
 import { initApp, MyDispatch, closeContextMenu } from './Actions/Actions';
 import DynamicSnackbar from './Components/Notification/DynamicSnackbar';
@@ -27,15 +26,17 @@ class App extends Component<AppProps> {
     render() {
         return (
             <div className="App">
-                <MaterialUI theme={theme}>
-                    <div onClick={this.props.handleHideContextMenu} onContextMenu={this.props.handleHideContextMenu}>
-                        <Navbar />
-                        <FileList />
-                        <ContextMenu />
-                        <DynamicSnackbar />
-                        <Dialogs />
-                    </div>
-                </MaterialUI>
+                <ThemeProvider theme={theme}>
+                    <StyledEngineProvider injectFirst>
+                        <div onClick={this.props.handleHideContextMenu} onContextMenu={this.props.handleHideContextMenu}>
+                            <Navbar />
+                            <FileList />
+                            <ContextMenu />
+                            <DynamicSnackbar />
+                            <Dialogs />
+                        </div>
+                    </StyledEngineProvider>
+                </ThemeProvider>
                 <HistoryHandler />
             </div>
         );

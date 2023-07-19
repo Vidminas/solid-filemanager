@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import UploadFileList from './UploadFileList';
 
 class FileUploader extends Component<FileUploadProps> {

@@ -1,7 +1,7 @@
 import React from 'react';
-import Menu from '@material-ui/core/Menu';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@mui/material/Menu';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { connect } from 'react-redux';
 import CreateFolderAction from '../ContextMenu/ContextMenuActions/CreateFolderAction';
 import CreateFileAction from '../ContextMenu/ContextMenuActions/CreateFileAction';
@@ -26,11 +26,13 @@ class ThreeDotsMenu extends React.Component {
 
     return (
       <div style={{marginLeft:'1em'}}>
-        <IconButton color="inherit" 
+        <IconButton
+          color="inherit"
           aria-label="More"
           aria-owns={Boolean(anchorEl) ? 'long-menu' : undefined}
           aria-haspopup="true"
-          onClick={this.handleClick}>
+          onClick={this.handleClick}
+          size="large">
           <MoreVertIcon />
         </IconButton>
 

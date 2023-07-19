@@ -1,10 +1,10 @@
 import React from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 import { connect } from 'react-redux';
 import { loadAndDisplayFile, displaySelectedMediaFile, loadAndEditFile, enterFolderByItem, MyDispatch } from '../../../Actions/Actions';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Typography from '@material-ui/core/Typography';
-import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Typography from '@mui/material/Typography';
+import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 import { FileItem, FolderItem, Item } from '../../../Api/Item';
 import { AppState } from '../../../Reducers/reducer';
 
