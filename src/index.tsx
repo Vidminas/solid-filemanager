@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
@@ -25,7 +25,8 @@ const tssCache = createCache({
     "key": "tss"
 });
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!);
+root.render(
     <Provider store={store}>
         <CacheProvider value={muiCache}>
             <TssCacheProvider value={tssCache}> 
@@ -33,7 +34,7 @@ ReactDOM.render(
             </TssCacheProvider>
         </CacheProvider>
     </Provider >
-    , document.getElementById('root'));
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
