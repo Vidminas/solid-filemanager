@@ -82,7 +82,7 @@ export const getItemList = async (path: string): Promise<Item[]> => {
         ]
         cache.add(path, itemList);
         return itemList
-    } catch (err) {
+    } catch (err: any) {
         throw handleFetchError(err);
     }
 };
@@ -98,7 +98,7 @@ export const getFileBlob = async (path: string, filename: string): Promise<Blob>
     try {
         const res = await fileClient.get(buildFileUrl(path, filename));
         return res.blob();
-    } catch (err) {
+    } catch (err: any) {
         throw handleFetchError(err);
     }
 };

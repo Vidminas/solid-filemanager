@@ -241,6 +241,12 @@ export const extractZipFile = (fileName: string): MyThunk => (dispatch, getState
         .finally(() => dispatch(stopLoading()));
 };
 
+declare global {
+    interface Navigator { 
+        msSaveOrOpenBlob?(file: Blob, fileName: string): void;
+    }
+}
+
 // code based on https://stackoverflow.com/a/30832210/6548154
 function promptDownload(file: Blob, fileName: string) {
     if (window.navigator.msSaveOrOpenBlob) // IE10+

@@ -5,7 +5,7 @@ import { MyDispatch, setHost, enterFolder } from "../../Actions/Actions";
 import { AppState } from "../../Reducers/reducer";
 
 class HistoryHandler extends Component<HistoryHandlerProps> {
-    private history: History<LocationState>;
+    private history: History;
     private states: LocationState[];
     private stateIndex: number;
 
@@ -15,7 +15,10 @@ class HistoryHandler extends Component<HistoryHandlerProps> {
         this.states = [];
         this.stateIndex = -1;
         this.history = createBrowserHistory();
-        this.history.listen((location, action) => {
+        this.history.listen(({
+            action,
+            location
+        }) => {
             switch(action) {
                 case 'POP':
                     this.handlePop(location);
@@ -57,17 +60,17 @@ class HistoryHandler extends Component<HistoryHandlerProps> {
         this.history.push(`?url=${url}`, newState);
     }
 
-    handlePop(location: Location<LocationState>) {
-        this.stateIndex = location.state.index;
+    handlePop(location: Location) {
+        this.stateIndex = (location.state as LocationState).index;
         this.props.handlePop(location);
     }
 
-    handleReplace(location: Location<LocationState>) {
-        this.states[this.stateIndex] = location.state;
+    handleReplace(location: Location) {
+        this.states[this.stateIndex] = (location.state as LocationState);
     }
 
-    handlePush(location: Location<LocationState>) {
-        this.states = [...this.states.slice(0, ++this.stateIndex), location.state];
+    handlePush(location: Location) {
+        this.states = [...this.states.slice(0, ++this.stateIndex), (location.state as LocationState)];
     }
 
     render() {
@@ -91,7 +94,7 @@ interface StateProps {
     path: string[];
 }
 interface DispatchProps {
-    handlePop(location: Location<LocationState>): void;
+    handlePop(location: Location): void;
 }
 interface HistoryHandlerProps extends StateProps, DispatchProps { }
 
@@ -103,12 +106,12 @@ const mapStateToProps = (state: AppState): StateProps => ({
 
 const mapDispatchToProps = (dispatch: MyDispatch): DispatchProps => {
     return {
-        handlePop: (location: Location<LocationState>) => {
+        handlePop: (location: Location) => {
             let host = '';
             let path: string[] = [];
 
             if (location && typeof location.state !== typeof undefined) {
-                ({ host, path } = location.state);
+                ({ host, path } = (location.state as MyLocation));
             }
             else {
                 const params = new URLSearchParams(location.search.substr(1));
