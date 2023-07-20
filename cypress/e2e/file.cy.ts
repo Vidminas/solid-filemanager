@@ -1,3 +1,5 @@
+/// <reference path="../types.d.ts" />
+
 describe('file operations', () => {
     beforeEach('login user', () => {
         cy.createRandomAccount().as('user')

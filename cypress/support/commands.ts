@@ -1,3 +1,5 @@
+/// <reference path="../types.d.ts" />
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -24,45 +26,17 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-const { createDpopHeader, generateDpopKeyPair, buildAuthenticatedFetch } = require('@inrupt/solid-client-authn-core')
-const uuid = require('uuid')
+import { createDpopHeader, generateDpopKeyPair, buildAuthenticatedFetch } from '@inrupt/solid-client-authn-core'
+import { v4 as uuidv4 } from 'uuid'
+
 const cssBaseUrl = 'http://localhost:8080'
 
 
-/**
- * pretends to be a normal fetch
- * this can be passed to buildAuthenticatedFetch
- * and it will resolve with { options }
- * 
- * this is used to get the valid authentication headers from buildAuthenticatedFetch
- */
-const cyFetchWrapper = (url, options = {}) => {
-    options.method ??= 'GET'
-    options.url = url
-    options.headers = Object.fromEntries(options.headers.entries())
-    // mock response
-    return {
-        ok: true, // buildAUthenticatedFetch relies on response.ok to be true. Else it checks for unauthorized errors
-        options,
-    }
-}
-
-/**
- * uses the authenticatio headers from cyFetchWrapper
- * and makes a cy.request
- */
-const cyUnwrapFetch = wrappedFetch => {
-    return async (...args) => {
-        const res = await wrappedFetch(...args)
-        return cy.request(res.options)
-    }
-}
-
 Cypress.Commands.add('createRandomAccount', () => {
-    const username = 'test-'  + uuid.v4()
+    const username = 'test-'  + uuidv4()
     const password = '12345'
     const email = `${username}@example.org`
-    const config = {
+    const config: IDPOptions = {
         idp: `${cssBaseUrl}/`,
         podUrl: `${cssBaseUrl}/${username}`,
         webId: `${cssBaseUrl}/${username}/profile/card#me`,
@@ -72,10 +46,10 @@ Cypress.Commands.add('createRandomAccount', () => {
     }
     const registerEndpoint = `${cssBaseUrl}/idp/register/`
     cy.request('POST', registerEndpoint, {
-        createWebId: 'on',
+        createWebId: true,
         webId: '',
-        register: 'on',
-        createPod: 'on',
+        register: true,
+        createPod: true,
         podName: username,
         email,
         password,
@@ -122,41 +96,47 @@ Cypress.Commands.add('login', user => {
     cy.contains('profile')
 })
 
-Cypress.Commands.add('authenticatedFetch', (user, ...args) => {
-    return cy.getAuthenticatedFetch(user)
-        .then(fetch => fetch(...args))
+Cypress.Commands.add('authenticatedFetch', (user, input, init) => {
+    return cy.getAuthenticatedFetch(user).then((authFetch) => 
+        new Cypress.Promise((resolve, reject) => 
+            authFetch(input, init)
+                .then(resolve)
+                .catch(reject)
+        )
+    );
 })
 
-Cypress.Commands.add('getAuthenticatedFetch', user => {
+Cypress.Commands.add('getAuthenticatedFetch', (user) => {
     // see https://github.com/CommunitySolidServer/CommunitySolidServer/blob/main/documentation/client-credentials.md
-    const credentialsEndpoint = `${cssBaseUrl}/idp/credentials/`
+    const credentialsEndpoint = `${cssBaseUrl}/idp/credentials/`;
+    const tokenEndpoint = `${cssBaseUrl}/.oidc/token`;
+
     return cy.request('POST', credentialsEndpoint, {
         email: user.email,
         password: user.password,
         name: 'cypress-login-token',
-    }).then(async response => {
-        const { id, secret } = response.body
-        const dpopKey = await generateDpopKeyPair()
-        const authString = `${encodeURIComponent(id)}:${encodeURIComponent(secret)}`
-        const tokenEndpoint = `${cssBaseUrl}/.oidc/token`
-        cy.request({
-            method: 'POST',
-            url: tokenEndpoint,
-            headers: {
-                authorization: `Basic ${Buffer.from(authString).toString('base64')}`,
-                'content-type': 'application/x-www-form-urlencoded',
-                dpop: await createDpopHeader(tokenEndpoint, 'POST', dpopKey),
-            },
-            body: 'grant_type=client_credentials&scope=webid',
-        }).then(async response => {
-            const {access_token: accessToken } = response.body
-            const authFetchWrapper = await buildAuthenticatedFetch(cyFetchWrapper, accessToken, { dpopKey })
-            const authFetch = cyUnwrapFetch(authFetchWrapper)
-            return cy.wrap(authFetch)
-        })
-    })
+    }).then(response => {
+        const { id, secret } = response.body;
+        const authString = `${encodeURIComponent(id)}:${encodeURIComponent(secret)}`;
 
-})
+        return generateDpopKeyPair().then(dpopKey => 
+            createDpopHeader(tokenEndpoint, 'POST', dpopKey).then(dpopHeader =>
+                cy.request({
+                    method: 'POST',
+                    url: tokenEndpoint,
+                    headers: {
+                        authorization: `Basic ${Buffer.from(authString).toString('base64')}`,
+                        'content-type': 'application/x-www-form-urlencoded',
+                        dpop: dpopHeader,
+                    },
+                    body: 'grant_type=client_credentials&scope=webid'
+                })
+                .then(response => buildAuthenticatedFetch(fetch, response.body.access_token, { dpopKey }))
+                .then(authFetch => cy.wrap(authFetch))
+            )
+        )
+    })
+});
 
 Cypress.Commands.add('inputFromLabel', label => {
     return cy.contains('label', label)
