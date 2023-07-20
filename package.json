@@ -8,8 +8,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "precss": "node delete_css_storage.js",
-    "css": "community-solid-server -p 8080 -c @css:config/file-no-setup.json -f ./community-solid-server",
-    "cypress": "wait-on --log --delay 5000 --interval 1000 --simultaneous 1 http://localhost:8080 http://localhost:3000 && cypress run",
+    "css": "community-solid-server -p 8080 -c css-config.json -f ./community-solid-server",
+    "cypress": "wait-on --log --delay 5000 --interval 1000 --simultaneous 1 http://localhost:8080/idp/ http://localhost:3000 && cypress run",
     "test:e2e": "concurrently --success \"last\" --kill-others \"npm:start\" \"npm:css\" \"npm:cypress\""
   },
   "repository": {
@@ -29,7 +29,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.5",
-    "@inrupt/solid-client-authn-browser": "^1.11.7",
+    "@inrupt/solid-client-authn-browser": "^1.17.1",
     "@mui/icons-material": "^5.14.1",
     "@mui/material": "^5.14.1",
     "@types/history": "^4.7.5",
@@ -67,8 +67,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@inrupt/solid-client-authn-core": "^1.11.7",
-    "@solid/community-server": "^4.1.0",
+    "@inrupt/solid-client-authn-core": "^1.17.1",
+    "@solid/community-server": "^6.0.1",
     "concurrently": "^8.2.0",
     "cypress": "^12.17.1",
     "uuid": "^9.0.0",

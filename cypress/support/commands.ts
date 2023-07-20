@@ -83,7 +83,7 @@ Cypress.Commands.add('login', user => {
     cy.contains('button', 'Log in').click()
 
     cy.url().should('include', '/consent')
-    cy.contains('button', 'Consent').click()
+    cy.contains('button', 'Authorize').click()
 
     cy.url().should('include', `${Cypress.config().baseUrl}/`)
     // workaround to wait for the input being input automatically, so the clear works
