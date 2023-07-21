@@ -19,7 +19,7 @@ const FormDialog: React.FC<ChooseLocationProps> = (props) => {
     const [oidcIssuer, setOidcIssuer] = useState("");
 
     useEffect(() => {
-        const params = new URLSearchParams(document.location.search.substr(1));
+        const params = new URLSearchParams(document.location.search.slice(1));
         const encodedUrl = params.get('url');
         setOidcIssuer('https://solidcommunity.net/');
 

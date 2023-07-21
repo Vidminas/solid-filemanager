@@ -8,7 +8,7 @@ import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 import { Item } from '../../../Api/Item';
 import { AppState } from '../../../Reducers/reducer';
 
-const OpenAction: React.FC<OpenActionProps> = (props) => {
+const EditAction: React.FC<EditActionProps> = (props) => {
     const { handleClick, selectedItems } = props;
     return (
         <MenuItem onClick={() => handleClick(selectedItems)}>
@@ -22,7 +22,7 @@ const OpenAction: React.FC<OpenActionProps> = (props) => {
     );
 }
 
-interface OpenActionProps {
+interface EditActionProps {
     handleClick(selectedItems: Item[]): void;
     selectedItems: Item[];
 }
@@ -41,4 +41,4 @@ const mapDispatchToProps = (dispatch: MyDispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(OpenAction);
+export default connect(mapStateToProps, mapDispatchToProps)(EditAction);

@@ -13,15 +13,12 @@ import { DIALOGS } from '../../../Actions/actionTypes';
 const FormDialog: React.FC<ContentProps> = (props) => {
     const { handleClose, open, blobUrl } = props;
     const [lastBlobUrl, setLastBlobUrl] = useState<string | undefined | null>(null);
-    const [content, setContent] = useState<string | null>("...");
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (blobUrl !== lastBlobUrl) {
             setLastBlobUrl(blobUrl);
-            setLoading(true);
         }
-    }, [blobUrl, lastBlobUrl, setLastBlobUrl, setLoading]);
+    }, [blobUrl, lastBlobUrl, setLastBlobUrl]);
 
     return (
         <div style={{marginLeft:'1em'}}>

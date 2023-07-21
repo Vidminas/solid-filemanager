@@ -29,7 +29,7 @@ const ContextMenu: React.FC<ContextMenuProps> = (props) => {
                 }}
                 open={open}
                 onClose={() => { }}
-                PaperProps={{ style: { width: 190 } }}>
+                slotProps={{ paper: { style: { width: 190 } } }}>
                 {acts.includes('open') && <OpenAction />}
                 {acts.includes('openInNewTab') && <OpenInNewTabAction />}
                 {acts.includes('download') && <DownloadAction />}

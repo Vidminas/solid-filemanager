@@ -341,12 +341,12 @@ function getItemsInZipFolder(zip: JSZip, folderPath: string): JSZip.JSZipObject[
 
 function getItemNameFromPath(path: string): string {
     path = path.endsWith('/') ? path.slice(0, -1) : path;
-    return path.substr(path.lastIndexOf('/') + 1);
+    return path.slice(path.lastIndexOf('/') + 1);
 }
 
 function getParentPathFromPath(path: string): string {
     path = path.endsWith('/') ? path.slice(0, -1) : path;
-    path = path.substr(0, path.lastIndexOf('/'));
+    path = path.slice(0, path.lastIndexOf('/'));
     return path;
 }
 

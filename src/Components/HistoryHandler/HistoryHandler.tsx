@@ -115,7 +115,7 @@ const mapDispatchToProps = (dispatch: MyDispatch): DispatchProps => {
                 ({ host, path } = (location.state as MyLocation));
             }
             else {
-                const params = new URLSearchParams(location.search.substr(1));
+                const params = new URLSearchParams(location.search.slice(1));
                 const url = params.get('url');
                 if (url !== null) {
                     ({ host, path } = getLocationObjectFromUrl(url));
