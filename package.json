@@ -11,7 +11,7 @@
     "precss": "node delete_css_storage.js",
     "css": "community-solid-server -p 8080 -c css-config.json -f ./community-solid-server",
     "cypress": "wait-on --log --delay 5000 --interval 1000 --simultaneous 1 http://localhost:8080/idp/ http://localhost:3000 && cypress run",
-    "test:e2e": "concurrently --success \"last\" --kill-others \"npm:start\" \"npm:css\" \"npm:cypress\""
+    "test:e2e": "cross-env BROWSER=none concurrently --success \"last\" --kill-others \"npm:start\" \"npm:css\" \"npm:cypress\""
   },
   "repository": {
     "type": "git",
@@ -68,6 +68,7 @@
     "@inrupt/solid-client-authn-core": "^1.17.1",
     "@solid/community-server": "^6.0.1",
     "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
     "cypress": "^12.17.2",
     "gh-pages": "^5.0.0",
     "uuid": "^9.0.0",
