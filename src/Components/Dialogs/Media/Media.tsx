@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,47 +13,45 @@ import { DialogStateProps, DialogDispatchProps } from '../dialogTypes';
 import { AppState } from '../../../Reducers/reducer';
 import { DIALOGS } from '../../../Actions/actionTypes';
 
-class FormDialog extends Component<MediaProps> {
-    render() {
-        const { file, handleClose, open } = this.props;
+const FormDialog: React.FC<MediaProps> = (props) => {
+    const { file, handleClose, open } = props;
 
-        const fileName = file ? file.name : undefined;
-        const url = file ? file.url : undefined;
-        // TODO: const provider = file ? (file.isVideo() ? 'html5' : 'audio') : '';
-        const type = file ? (file.isVideo() ? 'video' : 'audio') : undefined;
+    const fileName = file ? file.name : undefined;
+    const url = file ? file.url : undefined;
+    // TODO: const provider = file ? (file.isVideo() ? 'html5' : 'audio') : '';
+    const type = file ? (file.isVideo() ? 'video' : 'audio') : undefined;
 
-        return (
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-display-media" fullWidth={true} maxWidth={'lg'}>
-                <DialogTitle id="form-dialog-display-media">Display Media</DialogTitle>
-                <DialogContent>
-                    {
-                        file ?
-                            (
-                                <div>
-                                    <p>Playing {fileName}</p>
-                                    <Plyr
-                                        options={{
-                                            iconUrl: "./vendor/plyr/plyr.svg"   
-                                        }}
-                                        source={{
-                                            type: type!,
-                                            sources: [{ src: url!, /*TODO: provider=provider*/ }]
-                                        }}
-                                    />
-                                </div>
-                            )
-                            : <p>No media file opened</p>
-                            
-                    }
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary" type="button">
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
+    return (
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-display-media" fullWidth={true} maxWidth={'lg'}>
+            <DialogTitle id="form-dialog-display-media">Display Media</DialogTitle>
+            <DialogContent>
+                {
+                    file ?
+                        (
+                            <div>
+                                <p>Playing {fileName}</p>
+                                <Plyr
+                                    options={{
+                                        iconUrl: "./vendor/plyr/plyr.svg"   
+                                    }}
+                                    source={{
+                                        type: type!,
+                                        sources: [{ src: url!, /*TODO: provider=provider*/ }]
+                                    }}
+                                />
+                            </div>
+                        )
+                        : <p>No media file opened</p>
+                        
+                }
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary" type="button">
+                    Close
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
 }
 
 interface StateProps extends DialogStateProps {

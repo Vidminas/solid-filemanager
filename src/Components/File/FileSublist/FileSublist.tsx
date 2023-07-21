@@ -10,7 +10,7 @@ import '../File.css';
 import { FileItem, Item } from '../../../Api/Item';
 
 // TODO: Check main differences between normal File.tsx component
-function FileSublist(props: OwnProps) {
+const FileSublist: React.FC<OwnProps> = (props) => {
     const { item, isSelected, handleClick, handleDoubleClick } = props;
     const avatarStyle = {
         backgroundColor: isSelected ? blue['A200'] : undefined

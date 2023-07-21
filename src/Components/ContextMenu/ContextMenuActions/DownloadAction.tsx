@@ -8,7 +8,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { FileItem, Item } from '../../../Api/Item';
 import { AppState } from '../../../Reducers/reducer';
 
-function DownloadAction(props: DownloadActionProps) {
+const DownloadAction: React.FC<DownloadActionProps> = (props) => {
     const { handleClick, selectedItems } = props;
     return (
         <MenuItem onClick={() => handleClick(selectedItems)}>

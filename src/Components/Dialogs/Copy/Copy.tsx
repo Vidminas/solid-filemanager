@@ -8,7 +8,7 @@ import { DIALOGS } from '../../../Actions/actionTypes';
 
 import ChooseLocation from '../ChooseLocation/ChooseLocation';
 
-function CopyDialog(props: CopyProps) {
+const CopyDialog: React.FC<CopyProps> = (props) => {
     const { initialHost, initialPath, selectedItems, open, handleClose, copy } = props;
 
     return <ChooseLocation
@@ -19,7 +19,7 @@ function CopyDialog(props: CopyProps) {
         handleClose={handleClose}
         handleSubmit={(location) => copy(selectedItems, location)}
     />
-}
+};
 
 
 interface StateProps extends DialogStateProps {

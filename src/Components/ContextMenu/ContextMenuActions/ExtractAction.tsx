@@ -8,7 +8,7 @@ import { extractZipFile, MyDispatch } from '../../../Actions/Actions';
 import { AppState } from '../../../Reducers/reducer';
 import { Item } from '../../../Api/Item';
 
-function ExtractAction(props: ExtractActionProps) {
+const ExtractAction: React.FC<ExtractActionProps> = (props) => {
     const {handleClick, selectedItems} = props;
 
     return (

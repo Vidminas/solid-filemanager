@@ -6,7 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import FileIcon from '@mui/icons-material/InsertDriveFile';
 import { getHumanFileSize } from '../../Api/Item';
 
-function UploadFileList(props: UploadFileListProps) {
+const UploadFileList: React.FC<UploadFileListProps> = (props) => {
     const { files } = props;
     const list = Array.from(files).map((f, i) =>
         <ListItem dense key={i}>

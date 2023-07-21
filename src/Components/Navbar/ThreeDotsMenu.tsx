@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Menu from '@mui/material/Menu';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -8,43 +8,29 @@ import CreateFileAction from '../ContextMenu/ContextMenuActions/CreateFileAction
 import UploadFileAction from '../ContextMenu/ContextMenuActions/UploadFileAction';
 import ChooseLocationAction from '../ContextMenu/ContextMenuActions/ChooseLocationAction';
 
-class ThreeDotsMenu extends React.Component {
-  state = {
-    anchorEl: null as HTMLElement|null,
-  };
+const ThreeDotsMenu: React.FC = () => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
+  return (
+    <div style={{marginLeft:'1em'}}>
+      <IconButton
+        color="inherit"
+        aria-label="More"
+        aria-owns={Boolean(anchorEl) ? 'long-menu' : undefined}
+        aria-haspopup="true"
+        onClick={(event) => setAnchorEl(event.currentTarget)}
+        size="large">
+        <MoreVertIcon />
+      </IconButton>
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  render() {
-    const { anchorEl } = this.state;
-
-    return (
-      <div style={{marginLeft:'1em'}}>
-        <IconButton
-          color="inherit"
-          aria-label="More"
-          aria-owns={Boolean(anchorEl) ? 'long-menu' : undefined}
-          aria-haspopup="true"
-          onClick={this.handleClick}
-          size="large">
-          <MoreVertIcon />
-        </IconButton>
-
-        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
-          <CreateFolderAction handleClose={this.handleClose} />
-          <CreateFileAction handleClose={this.handleClose} />
-          <UploadFileAction handleClose={this.handleClose} />
-          <ChooseLocationAction handleClose={this.handleClose} />
-        </Menu>
-      </div>
-    );
-  }
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+        <CreateFolderAction handleClose={() => setAnchorEl(null)} />
+        <CreateFileAction handleClose={() => setAnchorEl(null)} />
+        <UploadFileAction handleClose={() => setAnchorEl(null)} />
+        <ChooseLocationAction handleClose={() => setAnchorEl(null)} />
+      </Menu>
+    </div>
+  );
 }
 
 

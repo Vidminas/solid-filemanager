@@ -8,7 +8,7 @@ import { openDialog, MyDispatch } from '../../../Actions/Actions';
 import { AppState } from '../../../Reducers/reducer';
 import { DIALOGS } from '../../../Actions/actionTypes';
 
-function CopyAction(props: CopyActionProps) {
+const CopyAction: React.FC<CopyActionProps> = (props) => {
     const { handleClick } = props;
 
     return (

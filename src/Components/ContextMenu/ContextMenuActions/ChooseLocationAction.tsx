@@ -8,7 +8,7 @@ import { openDialog, MyDispatch } from '../../../Actions/Actions';
 import { AppState } from '../../../Reducers/reducer';
 import { DIALOGS } from '../../../Actions/actionTypes';
 
-function ChooseLocationAction(props: ChooseLocationActionProps) {
+const ChooseLocationAction: React.FC<ChooseLocationActionProps> = (props) => {
     const { handleClick, handleClose } = props;
 
     const handleCloseAfter = (callback: () => void) => () => {

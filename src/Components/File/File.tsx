@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
     setSelectedItemsFromLastTo, loadAndEditFile, loadAndDisplayFile, displaySelectedMediaFile,
@@ -16,26 +16,24 @@ import blue from '@mui/material/colors/blue';
 import { FileItem, Item } from '../../Api/Item';
 import { AppState } from '../../Reducers/reducer';
 
-class File extends Component<FileProps> {
-    render() {
-        const { isSelected, item, handleClick, handleDoubleClick, handleContextMenu } = this.props;
-        const avatarStyle = {
-            backgroundColor: isSelected ? blue['A200'] : undefined
-        };
-        const realSize = (item instanceof FileItem) ? item.getDisplaySize() : null;
-        return (
-            <div className="File" onClick={handleClick} onDoubleClick={handleDoubleClick} onContextMenu={handleContextMenu} data-selected={isSelected}>
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar style={avatarStyle}>
-                            { (item instanceof FileItem) ? <FileIcon /> : <FolderIcon />}
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText className="filename" primary={item.getDisplayName()} secondary={realSize} />
-                </ListItem>
-            </div>
-        );
-    }
+const File: React.FC<FileProps> = (props) => {
+    const { isSelected, item, handleClick, handleDoubleClick, handleContextMenu } = props;
+    const avatarStyle = {
+        backgroundColor: isSelected ? blue['A200'] : undefined
+    };
+    const realSize = (item instanceof FileItem) ? item.getDisplaySize() : null;
+    return (
+        <div className="File" onClick={handleClick} onDoubleClick={handleDoubleClick} onContextMenu={handleContextMenu} data-selected={isSelected}>
+            <ListItem>
+                <ListItemAvatar>
+                    <Avatar style={avatarStyle}>
+                        { (item instanceof FileItem) ? <FileIcon /> : <FolderIcon />}
+                    </Avatar>
+                </ListItemAvatar>
+                <ListItemText className="filename" primary={item.getDisplayName()} secondary={realSize} />
+            </ListItem>
+        </div>
+    );
 }
 
 

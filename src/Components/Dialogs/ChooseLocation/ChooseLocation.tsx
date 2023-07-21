@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -9,89 +9,106 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { Item, FolderItem } from '../../../Api/Item';
 import * as ApiHandler from '../../../Api/ApiHandler';
 
-class FormDialog extends Component<OwnProps, OwnState> {
-    private host: string;
-    private path: string[];
+const usePrevious = <T extends any>(value: T) => {
+    const ref = useRef<T>();
+    useEffect(() => {
+      ref.current = value;
+    }, [value]);
+    return ref.current;
+}
 
-    constructor(props: OwnProps) {
-        super(props);
-        const { initialPath, initialHost } = props;
-        this.host = initialHost;
-        this.path = initialPath;
+// Borrowed from https://stackoverflow.com/a/61842546
+const useStateCallback = <T extends any>(
+    initialState: T
+    ): [T, (state: T, cb?: (state: T) => void) => void] => {
+    const [state, setState] = useState(initialState);
+    const cbRef = useRef<((state: T) => void) | undefined>(undefined); // init mutable ref container for callbacks
+  
+    const setStateCallback = useCallback((state: T, cb?: (state: T) => void) => {
+      cbRef.current = cb; // store current, passed callback in ref
+      setState(state);
+    }, []); // keep object reference stable, exactly like `useState`
+  
+    useEffect(() => {
+      // cb.current is `undefined` on initial render,
+      // so we only invoke callback on state *updates*
+      if (cbRef.current) {
+        cbRef.current(state);
+        cbRef.current = undefined; // reset callback after execution
+      }
+    }, [state]);
+  
+    return [state, setStateCallback];
+  }
 
-        this.state = {
-            items: [],
-            isLoading: true,
-            wasPreviouslyOpen: false,
-        };
-    }
+const FormDialog: React.FC<OwnProps> = (props) => {
+    const { initialHost, initialPath, open, handleClose, handleSubmit, actionName } = props;
+    const [host, setHost] = useState(initialHost);
+    const [path, setPath] = useStateCallback(initialPath);
+    const [items, setItems] = useState<Item[]>([]);
+    const [isLoading, setLoading] = useState(true);
+    const [wasPreviouslyOpen, setWasPreviouslyOpen] = useStateCallback(false);
 
-    componentDidUpdate(prevProps: OwnProps) {
-        if (prevProps.initialHost !== this.props.initialHost
-            || prevProps.initialPath.join('') !== this.props.initialPath.join('')) {
-            this.host = this.props.initialHost;
-            this.path = this.props.initialPath;
-        }
-        if (this.props.open && !this.state.wasPreviouslyOpen) {
-            this.setState({ wasPreviouslyOpen: true })
-            this.updateItems()
-        }
-        if (!this.props.open && this.state.wasPreviouslyOpen) {
-            this.setState({ wasPreviouslyOpen: false })
-        }
-    }
+    const previousHost = usePrevious(initialHost);
+    const previousPath = usePrevious(initialPath);
 
-    handleGoBack() {
-        this.path = this.path.slice(0, -1);
-        this.updateItems();
-    }
-
-    handleOpenFolder(folder: FolderItem) {
-        this.path = [...folder.path, folder.name];
-        this.updateItems();
-    }
-
-    async updateItems() {
-        this.setState({ isLoading: true });
-        const items = (await ApiHandler.getItemList(this.path.join('/')))
+    const updateItems = useCallback(async (itemsPath: string[]) => {
+        setLoading(true);
+        const newItems = (await ApiHandler.getItemList(itemsPath.join('/')))
             .filter(item => item instanceof FolderItem);
+        setLoading(false);
+        setItems(newItems);
+    }, [setLoading, setItems]);
 
-        this.setState({ isLoading: false, items });
-    }
+    useEffect(() => {
+        if (previousHost !== initialHost || previousPath?.join('') !== initialPath.join('')) {
+            setHost(initialHost);
+            setPath(initialPath);
+        }
+        if (open && !wasPreviouslyOpen) {
+            setWasPreviouslyOpen(true, () => updateItems(path));
+        }
+        if (!open && wasPreviouslyOpen) {
+            setWasPreviouslyOpen(false);
+        }
+    }, [previousHost, initialHost, previousPath, initialPath, setHost, setPath, open, wasPreviouslyOpen, setWasPreviouslyOpen, updateItems, path]);
 
-    render() {
-        const { open, handleClose, handleSubmit, actionName } = this.props;
-        const { items, isLoading } = this.state;
-        const host = this.host;
-        const path = this.path;
-        const url = `${host}/${path.join('/')}`;
-        const canGoBack = path.length > 0;
-        
-        return (
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-move" fullWidth={true} maxWidth={'sm'}>
-                <form>
-                    <DialogTitle id="form-dialog-move">
-                        {actionName} items to <small style={{color: 'grey'}}>{ url }</small>
-                    </DialogTitle>
-                    <DialogContent>
-                        <FileListSublist items={items} isLoading={isLoading} handleOpenFolder={this.handleOpenFolder.bind(this)}/>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleGoBack.bind(this)} color="primary" type="button" disabled={!canGoBack}>
-                            <KeyboardArrowLeftIcon /> Go back directory
-                        </Button>
 
-                        <Button onClick={handleClose} color="primary" type="button">
-                            Cancel
-                        </Button>
-                        <Button color="primary" onClick={(e) => { e.preventDefault(); handleSubmit({ host, path }) }} type="submit">
-                            {actionName}
-                        </Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
-        );
-    }
+    const handleGoBack = () => {
+        setPath(path.slice(0, -1), updateItems);
+    };
+
+    const handleOpenFolder = (folder: FolderItem) => {
+        setPath([...folder.path, folder.name], updateItems);
+    };
+
+    const url = `${host}/${path.join('/')}`;
+    const canGoBack = path.length > 0;
+    
+    return (
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-move" fullWidth={true} maxWidth={'sm'}>
+            <form>
+                <DialogTitle id="form-dialog-move">
+                    {actionName} items to <small style={{color: 'grey'}}>{ url }</small>
+                </DialogTitle>
+                <DialogContent>
+                    <FileListSublist items={items} isLoading={isLoading} handleOpenFolder={handleOpenFolder}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleGoBack} color="primary" type="button" disabled={!canGoBack}>
+                        <KeyboardArrowLeftIcon /> Go back directory
+                    </Button>
+
+                    <Button onClick={handleClose} color="primary" type="button">
+                        Cancel
+                    </Button>
+                    <Button color="primary" onClick={(e) => { e.preventDefault(); handleSubmit({ host, path }) }} type="submit">
+                        {actionName}
+                    </Button>
+                </DialogActions>
+            </form>
+        </Dialog>
+    );
 }
 
 interface OwnProps {
@@ -101,12 +118,6 @@ interface OwnProps {
     initialPath: string[];
     handleSubmit({ host, path }: { host: string, path: string[] }): void;
     handleClose(): void;
-}
-
-interface OwnState {
-    items: Item[];
-    isLoading: boolean;
-    wasPreviouslyOpen: boolean;
 }
 
 export default FormDialog;

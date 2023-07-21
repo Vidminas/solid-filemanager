@@ -8,7 +8,7 @@ import { zipAndUpload, MyDispatch } from '../../../Actions/Actions';
 import { Item } from '../../../Api/Item';
 import { AppState } from '../../../Reducers/reducer';
 
-function ZipAction(props: ZipActionProps) {
+const ZipAction: React.FC<ZipActionProps> = (props) => {
     const { handleClick, selectedItems } = props;
 
     return (

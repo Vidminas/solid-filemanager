@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Item } from '../../../Api/Item';
 import { AppState } from '../../../Reducers/reducer';
 
-function RemoveAction(props: RemoveActionProps) {
+const RemoveAction: React.FC<RemoveActionProps> = (props) => {
     const { handleClick, selectedItems } = props;
     return (
         <MenuItem onClick={() => handleClick(selectedItems)}>

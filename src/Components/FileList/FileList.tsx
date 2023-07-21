@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import File from '../File/File'; 
 import FileListEmptyMessage from './FileListEmptyMessage';
@@ -7,21 +7,19 @@ import './FileList.css';
 import { Item } from '../../Api/Item';
 import { AppState } from '../../Reducers/reducer';
 
-class FileList extends Component<FileListProps> {
-    render() {
-        const { items, isLoading } = this.props;
-        const itemComponents = items.map((item, key) => {
-            return <File item={item} key={key} />;
-        });
+const FileList: React.FC<FileListProps> = (props) => {
+    const { items, isLoading } = props;
+    const itemComponents = items.map((item, key) => {
+        return <File item={item} key={key} />;
+    });
 
-        return <div className="FileList">
-            { isLoading ? 
-                <Loader /> : 
-                itemComponents.length ? itemComponents : <FileListEmptyMessage />
-            }
-        </div>
-    }
-}
+    return <div className="FileList">
+        { isLoading ? 
+            <Loader /> : 
+            itemComponents.length ? itemComponents : <FileListEmptyMessage />
+        }
+    </div>
+};
 
 interface StateProps {
     items: Item[];

@@ -8,7 +8,7 @@ import { DIALOGS } from '../../../Actions/actionTypes';
 
 import ChooseLocation from '../ChooseLocation/ChooseLocation';
 
-function MoveDialog(props: MoveProps) {
+const MoveDialog: React.FC<MoveProps> = (props) => {
     const { initialHost, initialPath, selectedItems, open, handleClose, move } = props;
 
     return <ChooseLocation

@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -12,83 +12,67 @@ import { AppState } from '../../../Reducers/reducer';
 import { DIALOGS } from '../../../Actions/actionTypes';
 import { Item } from '../../../Api/Item';
 
-class FormDialog extends Component<EditProps> {
-    private textField: React.RefObject<HTMLTextAreaElement> = createRef();
-    state = {
-        lastBlobUrl: null as string|null,
-        content: null as string|null,
-        contentType: null as string|null,
-        loading: false
+const FormDialog: React.FC<EditProps> = (props) => {
+    const { blobUrl, handleClose, open, item } = props;
+    const textField = useRef<HTMLTextAreaElement>(null);
+    const [lastBlobUrl, setLastBlobUrl] = useState<string | null>(null);
+    const [content, setContent] = useState<string | null>(null);
+    const [contentType, setContentType] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (blobUrl !== lastBlobUrl) {
+            setLastBlobUrl(blobUrl);
+            setLoading(true);
+
+            blobUrl && fetch(blobUrl).then(async r => {
+                setContent(await r.text());
+                setContentType(r.headers.get('content-type'));
+                setLoading(false);
+            });
+        }
+    }, [blobUrl, lastBlobUrl, setLastBlobUrl, setLoading, setContent, setContentType]);
+
+    const handleSave = (event: DialogButtonClickEvent) => {
+        event.preventDefault();
+        if (textField.current && item) {
+            props.handleSubmit(event, {
+                itemName: item.name,
+                content: textField.current.value,
+                contentType: contentType ?? 'text/plain',
+            });
+        }
     };
 
-    componentDidUpdate() {
-        if (this.props.blobUrl !== this.state.lastBlobUrl) {
-            this.setState({
-                lastBlobUrl: this.props.blobUrl
-            });
-            this.setState({
-                loading: true
-            });
+    const itemName = item ? item.getDisplayName() : 'No item selected';
+    const textAreaStyle = {
+        width: '100%',
+        minHeight: '300px'
+    };
+    const textArea = <textarea style={textAreaStyle} defaultValue={content || ''} ref={textField} />;
 
-            this.props.blobUrl && fetch(this.props.blobUrl).then(async r => {
-                this.setState({
-                    content: await r.text(),
-                    contentType: r.headers.get('content-type')
-                });
-                this.setState({
-                    loading: false
-                });
-            });
-        }
-    }
-
-    handleSave(event: DialogButtonClickEvent) {
-        event.preventDefault();
-        const textField = this.textField.current;
-        const item = this.props.item;
-        if (textField && item) {
-            const content = textField.value;
-            const contentType = this.state.contentType ? this.state.contentType : 'text/plain';
-            this.props.handleSubmit(event, {
-                itemName: item.name,
-                content,
-                contentType
-            });
-        }
-    }
-
-    render() {
-        const { handleClose, open, item } = this.props;
-        const itemName = item ? item.getDisplayName() : 'No item selected';
-        const textAreaStyle = {
-            width: '100%',
-            minHeight: '300px'
-        };
-        const textArea = <textarea style={textAreaStyle} defaultValue={this.state.content || ''} ref={this.textField} />;
-
-        return (
-            <div>
-              <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-edit" fullWidth={true} maxWidth={'sm'}>
-                <form>
-                  <DialogTitle id="form-dialog-edit">Editing file: {itemName} </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                      {this.state.loading ? 'Loading...' : textArea}
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose} color="primary" type="button">
-                      Close
-                    </Button>
-                    <Button color="primary" onClick={this.handleSave.bind(this)} type="submit">
-                      Update
-                    </Button>
-                  </DialogActions>
-                </form>
-              </Dialog>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-edit" fullWidth={true} maxWidth={'sm'}>
+            <form>
+                <DialogTitle id="form-dialog-edit">Editing file: {itemName} </DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                    {loading ? 'Loading...' : textArea}
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleClose} color="primary" type="button">
+                    Close
+                </Button>
+                <Button color="primary" onClick={handleSave} type="submit">
+                    Update
+                </Button>
+                </DialogActions>
+            </form>
+            </Dialog>
+        </div>
+    );
 }
 
 interface StateProps extends DialogStateProps {

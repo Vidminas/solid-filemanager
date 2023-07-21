@@ -8,7 +8,7 @@ import LinkIcon from '@mui/icons-material/Link';
 import { Item } from '../../../Api/Item';
 import { AppState } from '../../../Reducers/reducer';
 
-function OpenInNewTabAction(props: OpenInNewTabActionProps) {
+const OpenInNewTabAction: React.FC<OpenInNewTabActionProps> = (props) => {
     const { handleClick, selectedItems } = props;
     return (
         <MenuItem onClick={() => handleClick(selectedItems)}>

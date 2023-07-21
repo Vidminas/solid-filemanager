@@ -8,7 +8,7 @@ import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 import { FileItem, FolderItem, Item } from '../../../Api/Item';
 import { AppState } from '../../../Reducers/reducer';
 
-function OpenAction(props: OpenActionProps) {
+const OpenAction: React.FC<OpenActionProps> = (props) => {
     const { handleClick, selectedItems } = props;
     return (
         <MenuItem onClick={() => handleClick(selectedItems)}>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import './ContextMenu.css';
 import Menu from '@mui/material/Menu';
@@ -15,37 +15,34 @@ import OpenInNewTabAction from './ContextMenuActions/OpenInNewTabAction';
 import { Item, FileItem, FolderItem } from '../../Api/Item';
 import { AppState } from '../../Reducers/reducer';
 
-class ContextMenu extends Component<ContextMenuProps> {
+const ContextMenu: React.FC<ContextMenuProps> = (props) => {
+    const { acts, open, x, y } = props;
 
-    render() {
-        const { acts, open, x, y } = this.props;
-
-        return (
-            <div>
-                <Menu
-                    anchorReference="anchorPosition"
-                    anchorPosition={{ top: y, left: x }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
-                    }}
-                    open={open}
-                    onClose={() => { }}
-                    PaperProps={{ style: { width: 190 } }}>
-                    {acts.includes('open') && <OpenAction />}
-                    {acts.includes('openInNewTab') && <OpenInNewTabAction />}
-                    {acts.includes('download') && <DownloadAction />}
-                    {acts.includes('compress') && <ZipAction />}
-                    {acts.includes('extract') && <ExtractAction />}
-                    {acts.includes('edit') && <EditAction />}
-                    {acts.includes('copy') && <CopyAction />}
-                    {acts.includes('move') && <MoveAction />}
-                    {acts.includes('rename') && <RenameAction />}
-                    {acts.includes('remove') && <RemoveAction />}
-                </Menu>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <Menu
+                anchorReference="anchorPosition"
+                anchorPosition={{ top: y, left: x }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                open={open}
+                onClose={() => { }}
+                PaperProps={{ style: { width: 190 } }}>
+                {acts.includes('open') && <OpenAction />}
+                {acts.includes('openInNewTab') && <OpenInNewTabAction />}
+                {acts.includes('download') && <DownloadAction />}
+                {acts.includes('compress') && <ZipAction />}
+                {acts.includes('extract') && <ExtractAction />}
+                {acts.includes('edit') && <EditAction />}
+                {acts.includes('copy') && <CopyAction />}
+                {acts.includes('move') && <MoveAction />}
+                {acts.includes('rename') && <RenameAction />}
+                {acts.includes('remove') && <RemoveAction />}
+            </Menu>
+        </div>
+    );
 }
 
 interface StateProps {

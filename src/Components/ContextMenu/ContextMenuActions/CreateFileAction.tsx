@@ -8,7 +8,7 @@ import { openDialog, MyDispatch } from '../../../Actions/Actions';
 import { AppState } from '../../../Reducers/reducer';
 import { DIALOGS } from '../../../Actions/actionTypes';
 
-function CreateFileAction(props: CreateFileActionProps) {
+const CreateFileAction: React.FC<CreateFileActionProps> = (props) => {
     const {handleClick, handleClose} = props;
 
     const handleCloseAfter = (callback: () => void) => () => {

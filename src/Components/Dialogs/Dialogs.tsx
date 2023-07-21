@@ -11,7 +11,7 @@ import DialogCopy from './Copy/Copy';
 import DialogUploadFile from './UploadFile/UploadFile';
 
 // TODO: Consider moving the visibility logic here
-function Dialogs() {
+const Dialogs: React.FC = () => {
     return (
         <div className="Dialogs">
             <DialogMenu />

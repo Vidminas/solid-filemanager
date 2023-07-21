@@ -10,13 +10,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-function Loader() {
+const Loader: React.FC = () => {
   const { classes } = useStyles();
-    return (
-        <Grid container justifyContent="center">
-            <CircularProgress className={classes.progress} color="secondary" />
-        </Grid>
-    );
+  return (
+      <Grid container justifyContent="center">
+          <CircularProgress className={classes.progress} color="secondary" />
+      </Grid>
+  );
 }
 
 export default Loader;

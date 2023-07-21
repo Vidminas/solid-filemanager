@@ -52,7 +52,7 @@ const useStyles1 = makeStyles()((theme) => ({
     },
 }));
 
-function MySnackbarContent(props: MySnackbarContentProps) {
+const MySnackbarContent: React.FC<MySnackbarContentProps> = (props) => {
   const { open, className, message, variant, ...other } = props;
   const { classes, cx } = useStyles1();
   const Icon = variantIcon[variant];
@@ -72,7 +72,7 @@ function MySnackbarContent(props: MySnackbarContentProps) {
       />
     : <></>
   );
-}
+};
 
 interface MySnackbarContentProps {
   open: boolean;
@@ -88,7 +88,7 @@ const useStyles2 = makeStyles()((theme: Theme) => ({
   },
 }));
 
-function CustomizedSnackbars(props: StateProps) {
+const CustomizedSnackbars: React.FC<StateProps> = (props) => {
   const { open, errorMsg } = props;
   const { classes } = useStyles2();
   return (
@@ -99,7 +99,7 @@ function CustomizedSnackbars(props: StateProps) {
         message={errorMsg}
       />
   );
-}
+};
 
 interface StateProps {
   open: boolean;

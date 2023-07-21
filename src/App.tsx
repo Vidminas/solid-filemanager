@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import FileList from './Components/FileList/FileList';
 import Navbar from './Components/Navbar/Navbar';
 import ContextMenu from './Components/ContextMenu/ContextMenu';
@@ -17,29 +17,26 @@ const theme = createTheme({
     },
 });
 
-class App extends Component<AppProps> {
+const App: React.FC<AppProps> = (props) => {
+    const { init, handleHideContextMenu } = props;
 
-    componentDidMount() {
-        this.props.init();
-    };
+    useEffect(() => init(), [init]);
 
-    render() {
-        return (
-            <div className="App">
-                <ThemeProvider theme={theme}>
-                    <div onClick={this.props.handleHideContextMenu} onContextMenu={this.props.handleHideContextMenu}>
-                        <Navbar />
-                        <FileList />
-                        <ContextMenu />
-                        <DynamicSnackbar />
-                        <Dialogs />
-                    </div>
-                </ThemeProvider>
-                <HistoryHandler />
-            </div>
-        );
-    }
-}
+    return (
+        <div className="App">
+            <ThemeProvider theme={theme}>
+                <div onClick={handleHideContextMenu} onContextMenu={handleHideContextMenu}>
+                    <Navbar />
+                    <FileList />
+                    <ContextMenu />
+                    <DynamicSnackbar />
+                    <Dialogs />
+                </div>
+            </ThemeProvider>
+            <HistoryHandler />
+        </div>
+    );
+};
 
 interface DispatchProps {
     init(): void;

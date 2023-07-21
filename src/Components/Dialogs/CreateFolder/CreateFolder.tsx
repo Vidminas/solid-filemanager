@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { useRef } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -11,39 +11,35 @@ import { DialogStateProps, DialogDispatchProps, DialogButtonClickEvent } from '.
 import { AppState } from '../../../Reducers/reducer';
 import { DIALOGS } from '../../../Actions/actionTypes';
 
-class FormDialog extends Component<CreateFolderProps> {
-    private textField: React.RefObject<HTMLInputElement> = createRef();
+const FormDialog: React.FC<CreateFolderProps> = (props) => {
+    const { handleClose, open } = props;
+    const textField = useRef<HTMLInputElement>(null);
 
-    handleSubmit(event: DialogButtonClickEvent) {
-        const textField = this.textField.current;
-        if (textField) {
-            const folderName = textField.value;
-            this.props.handleSubmit(event, { folderName });
+    const handleSubmit = (event: DialogButtonClickEvent) => {
+        if (textField.current) {
+            const folderName = textField.current.value;
+            props.handleSubmit(event, { folderName });
         }
     }
 
-    render() {
-        const { handleClose, open } = this.props;
-
-        return (
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-create-folder" fullWidth={true} maxWidth={'sm'}>
-                <form>
-                    <DialogTitle id="form-dialog-create-folder">Create folder</DialogTitle>
-                    <DialogContent>
-                        <TextField autoFocus fullWidth margin="dense" label="Folder name" type="text" inputRef={this.textField} />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose} color="primary" type="button">
-                            Cancel
-                    </Button>
-                        <Button color="primary" type="submit" onClick={this.handleSubmit.bind(this)}>
-                            Save
-                    </Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
-        );
-    }
+    return (
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-create-folder" fullWidth={true} maxWidth={'sm'}>
+            <form>
+                <DialogTitle id="form-dialog-create-folder">Create folder</DialogTitle>
+                <DialogContent>
+                    <TextField autoFocus fullWidth margin="dense" label="Folder name" type="text" inputRef={textField} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary" type="button">
+                        Cancel
+                </Button>
+                    <Button color="primary" type="submit" onClick={handleSubmit}>
+                        Save
+                </Button>
+                </DialogActions>
+            </form>
+        </Dialog>
+    );
 }
 
 interface DispatchProps extends DialogDispatchProps {

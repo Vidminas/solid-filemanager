@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { useRef } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -11,39 +11,35 @@ import { AppState } from '../../../Reducers/reducer';
 import { DialogStateProps, DialogDispatchProps, DialogButtonClickEvent } from '../dialogTypes';
 import { DIALOGS } from '../../../Actions/actionTypes';
 
-class FormDialog extends Component<CreateFileProps> {
-    private textField: React.RefObject<HTMLInputElement> = createRef();
+const FormDialog: React.FC<CreateFileProps> = (props) => {
+    const { handleClose, open } = props;
+    const textField = useRef<HTMLInputElement>(null);
 
-    handleSubmit(event: DialogButtonClickEvent) {
-        const textField = this.textField.current;
-        if (textField) {
-            const fileName = textField.value;
-            this.props.handleSubmit(event, { fileName });
+    const handleSubmit = (event: DialogButtonClickEvent) => {
+        if (textField.current) {
+            const fileName = textField.current.value;
+            props.handleSubmit(event, { fileName });
         }
-    }
+    };
 
-    render() {
-        const { handleClose, open } = this.props;
-
-        return (
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-create-file" fullWidth={true} maxWidth={'sm'}>
-                <form>
-                    <DialogTitle id="form-dialog-create-file">Create file</DialogTitle>
-                    <DialogContent>
-                        <TextField autoFocus fullWidth margin="dense" label="File name" type="text" inputRef={this.textField}/>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose} color="primary" type="button">
-                            Cancel
-                    </Button>
-                        <Button color="primary" type="submit" onClick={this.handleSubmit.bind(this)}>
-                            Create
-                    </Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
-        );
-    }
+    return (
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-create-file" fullWidth={true} maxWidth={'sm'}>
+            <form>
+                <DialogTitle id="form-dialog-create-file">Create file</DialogTitle>
+                <DialogContent>
+                    <TextField autoFocus fullWidth margin="dense" label="File name" type="text" inputRef={textField}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary" type="button">
+                        Cancel
+                </Button>
+                    <Button color="primary" type="submit" onClick={handleSubmit}>
+                        Create
+                </Button>
+                </DialogActions>
+            </form>
+        </Dialog>
+    );
 }
 
 interface DispatchProps extends DialogDispatchProps {

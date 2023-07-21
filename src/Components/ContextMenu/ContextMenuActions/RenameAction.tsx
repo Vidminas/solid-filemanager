@@ -8,7 +8,7 @@ import { openDialog, MyDispatch } from '../../../Actions/Actions';
 import { AppState } from '../../../Reducers/reducer';
 import { DIALOGS } from '../../../Actions/actionTypes';
 
-function MoveAction(props: MoveActionProps) {
+const MoveAction: React.FC<MoveActionProps> = (props) => {
     const { handleClick } = props;
 
     return (

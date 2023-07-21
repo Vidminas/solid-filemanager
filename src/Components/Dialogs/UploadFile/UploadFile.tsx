@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -11,33 +11,30 @@ import FileUploader from '../../FileUploader/FileUploader';
 import { DialogStateProps, DialogDispatchProps } from '../dialogTypes';
 import { AppState } from '../../../Reducers/reducer';
 
-class FormDialog extends Component<UploadFileProps> {
+const FormDialog: React.FC<UploadFileProps> = (props) => {
+    const { handleClose, handleReset, handleSubmit, open, canUpload, progress, fileList, handleSelectedFiles } = props;
 
-    render() {
-        const { handleClose, handleReset, handleSubmit, open, canUpload, progress, fileList, handleSelectedFiles } = this.props;
-
-        return (
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-upload" fullWidth={true} maxWidth={'sm'}>
-                <form>
-                    <DialogTitle id="form-dialog-upload">
-                        Upload files
-                    </DialogTitle>
-                    <DialogContent>
-                        <FileUploader fileList={fileList} handleSelectedFiles={handleSelectedFiles} handleReset={handleReset}/>
-                        {canUpload ? <LinearProgress variant="determinate" value={progress} /> : null }
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose} color="primary" type="button">
-                            Cancel
-                        </Button>
-                        <Button color="primary" onClick={handleSubmit} disabled={!canUpload} type="submit">
-                            Upload
-                        </Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
-        );
-    }
+    return (
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-upload" fullWidth={true} maxWidth={'sm'}>
+            <form>
+                <DialogTitle id="form-dialog-upload">
+                    Upload files
+                </DialogTitle>
+                <DialogContent>
+                    <FileUploader fileList={fileList} handleSelectedFiles={handleSelectedFiles} handleReset={handleReset}/>
+                    {canUpload ? <LinearProgress variant="determinate" value={progress} /> : null }
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary" type="button">
+                        Cancel
+                    </Button>
+                    <Button color="primary" onClick={handleSubmit} disabled={!canUpload} type="submit">
+                        Upload
+                    </Button>
+                </DialogActions>
+            </form>
+        </Dialog>
+    );
 }
 
 interface StateProps extends DialogStateProps {

@@ -5,7 +5,7 @@ import FileListEmptyMessage from '../FileListEmptyMessage';
 import './FileListSublist.css'; 
 import { FolderItem } from '../../../Api/Item';
 
-function FileListSublist(props: OwnProps) {
+const FileListSublist: React.FC<OwnProps> = (props) => {
     const { items, isLoading, handleOpenFolder } = props;
     
     const itemComponents = items.map((item, key) => {

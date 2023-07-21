@@ -77,7 +77,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-function SearchAppBar(props: SearchAppBarProps) {
+const SearchAppBar: React.FC<SearchAppBarProps> = (props) => {
   const { path, filter, moveUpwards, canGoBack, handleChange, handleRefresh } = props;
   const { classes } = useStyles();
   return (
